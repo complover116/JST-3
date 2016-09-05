@@ -18,9 +18,10 @@ import javax.swing.JPanel;
 
 public class JST3 {
 	public static final float RATE = 44100;
-	public static final int SAMPLESIZE = 4410;
+	public static final int SAMPLESIZE = 2000;
+	public static final int SAMPLENUM = 500;
 	public static final float MAXFREQ = 2000;
-	public static Frequency[][] data = new Frequency[100][];
+	public static Frequency[][] data = new Frequency[SAMPLENUM][];
 	public static void main(String[] args) {
 		System.out.println("I am JST 3!");
 		JFrame frame = new JFrame("JST3");
@@ -34,7 +35,8 @@ public class JST3 {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		if(false) {
 		Audio.openAudio("E:/Dev/JST3/dedede.wav");
-		for(int i = 0; i < 100; i ++){
+		for(int i = 0; i < SAMPLENUM; i ++){
+			System.out.println("Analysing..."+((float)i/SAMPLENUM*100)+"%");
 			Frequency res[] = FFT.Transform(new SignalFrame(Audio.read(SAMPLESIZE), 0, SAMPLESIZE));
 			res = Frequency.combine(res,200);
 			graph.update(res);

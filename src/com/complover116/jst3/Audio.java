@@ -48,7 +48,7 @@ public class Audio {
 			}
 		}
 		short array[] = new short[data.size()];
-		System.out.println("Read "+array.length+" datapoints ("+array.length*2+" raw bytes)");
+		//System.out.println("Read "+array.length+" datapoints ("+array.length*2+" raw bytes)");
 		for(int i = 0; i < array.length; i ++) {
 			array[i] = data.get(i);
 		}
