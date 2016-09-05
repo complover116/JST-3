@@ -1,6 +1,8 @@
 package com.complover116.jst3;
 
-public class Frequency {
+import java.io.Serializable;
+
+public class Frequency implements Serializable {
 	/***
 	 * Signal amplitude (0-1)f!
 	 */
@@ -40,7 +42,7 @@ public class Frequency {
 					sum += in[j].amplitude;
 					num ++;
 				}
-				out[i] = new Frequency(sum/num, (int) (i*(JST3.MAXFREQ/resolution)));
+				out[i] = new Frequency(sum, (int) (i*(JST3.MAXFREQ/resolution)));
 			}
 		}
 		
