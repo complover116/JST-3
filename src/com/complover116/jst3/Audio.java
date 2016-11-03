@@ -12,6 +12,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Audio {
 	static AudioInputStream din = null;
+	public static int numChannels = 0;
 	public static void openAudio(String filename) {
 		File file = new File(filename);
 		AudioInputStream in;
@@ -20,9 +21,10 @@ public class Audio {
 			
 			AudioFormat baseFormat = in.getFormat();
 			AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16,
-					baseFormat.getChannels(), baseFormat.getChannels()*2, baseFormat.getSampleRate(), true);
+					1, 2, baseFormat.getSampleRate(), true);
 			din = AudioSystem.getAudioInputStream(decodedFormat, in);
-			System.out.println("Opened the file...");
+			numChannels = baseFormat.getChannels();
+			System.out.println("Opened "+filename);
 		} catch (UnsupportedAudioFileException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,11 +38,19 @@ public class Audio {
 			byte bytein[] = new byte[2];
 			ByteBuffer buf = ByteBuffer.wrap(bytein);
 			try {
-				if(numread > amount||din.read(bytein) == -1) {
+				if(numread > amount) {
 					
 					break;
+				} else if(din.read(bytein) == -1){
+					return null;
 				} else {
+					if(numread%JST3.UNDERSAMPLING==0)
 					data.add(buf.getShort());
+					
+					//Skip the extra channels
+					/*for(int i = 1; i < 2; i++){
+						din.read(bytein);
+					}*/
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

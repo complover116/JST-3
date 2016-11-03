@@ -1,8 +1,11 @@
 package com.complover116.jst3;
 
+import org.jtransforms.fft.FloatFFT_1D;
+
 public class FFT {
+	public static FloatFFT_1D fft;
 	public static Frequency[] Transform(SignalFrame signal) {
-		int freqnum = 1000;
+		int freqnum = JST3.MAXFREQ;
 		Frequency frequencies[] = new Frequency[freqnum];
 		//System.out.println("FFT started");
 		//Loop over all detectable frequencies
@@ -44,11 +47,18 @@ public class FFT {
 		//System.out.println("FFT completed");
 		return frequencies;
 	}
-	public static Frequency[] TransformAndNormalize(SignalFrame signal) {
-		Frequency res[] = Transform(signal);
-		for(Frequency f : res) {
-			//f.frequency
+	public static Frequency[] TransformNew(SignalFrame signal) {
+		Frequency frequencies[] = new Frequency[JST3.MAXFREQ];
+		float input[] = new float[signal.length*2];
+		for(int i = 0; i < signal.length; i ++)
+			input[i*2] = signal.data[i];
+		fft.complexForward(input);
+		
+		for(int i = 0; i < JST3.MAXFREQ; i ++) {
+			frequencies[i] = 
+					new Frequency((float) Math.sqrt(input[i*2]*input[i*2] + input[i*2+1]*input[i*2+1])/2500, (int) (i*JST3.RATE/signal.length));
 		}
-		return res;
+		return frequencies;
 	}
+	
 }

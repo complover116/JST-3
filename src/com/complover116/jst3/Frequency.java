@@ -42,8 +42,29 @@ public class Frequency implements Serializable {
 					sum += in[j].amplitude;
 					num ++;
 				}
-				out[i] = new Frequency(sum, (int) (i*(JST3.MAXFREQ/resolution)));
+				
 			}
+			out[i] = new Frequency(sum/num, (int) (i*(JST3.MAXFREQ/resolution)));
+		}
+		
+		return out;
+	}
+	public static Frequency[] combineScaled(Frequency[] in, int resolution) {
+		
+		Frequency out[] = new Frequency[resolution];
+		
+		for(int i = 0; i < resolution; i ++) {
+			int num = 0;
+			float sum = 0;
+			for(int j = (int) (i*(Math.ceil(i/5))); j < (i+1)*Math.ceil(i/5); j++) {
+				//if(in[j].frequency >= i*(JST3.MAXFREQ/resolution) && in[j].frequency < (i+1)*(JST3.MAXFREQ/resolution)) {
+					sum += in[j].amplitude;
+					num ++;
+				//}
+				
+			}
+			//num = 2;
+			out[i] = new Frequency(sum/num, (int) (i*(JST3.MAXFREQ/resolution)));
 		}
 		
 		return out;
