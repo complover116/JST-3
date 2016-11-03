@@ -23,14 +23,15 @@ public class AnalysisThread extends Thread  {
 			
 			JST3.data[counter] = res;
 			JST3.lastAnalyzedFrame = counter;
-			if(FreqGraph.overhead>1000) {
+			//Will try its best without stopping, possibly temporary behaviour
+			/*if(FreqGraphRenderer.overhead>1000) {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
 		}
 	}
 }

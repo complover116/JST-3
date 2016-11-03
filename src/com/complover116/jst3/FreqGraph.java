@@ -23,7 +23,8 @@ public class FreqGraph extends JPanel {
 	public static volatile int overhead = 0;
 	@Override
 	public void paintComponent(Graphics g) {
-		
+		((Graphics2D)g).setBackground(new Color(0, true));
+		((Graphics2D)g).clearRect(0, 0, this.getWidth(), this.getHeight());
 		FreqGraphRenderer.render((Graphics2D)g, this.getWidth(), this.getHeight(), freq);
 	}
 	public void update(Frequency freq[], int pos) {

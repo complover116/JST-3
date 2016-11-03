@@ -149,7 +149,12 @@ public class JST3 {
 				e.printStackTrace();
 			}
 		} else {
-			NewMode.start();
+			try {
+				NewMode.start(filename);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		}
 		
