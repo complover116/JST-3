@@ -29,7 +29,10 @@ public class EffectedBG extends JPanel {
 				avgBassAmp += freq[i].amplitude;
 			}
 			avgBassAmp /= 19;
+		
 		g2d.drawImage(bg, (int)(Math.random()*avgBassAmp*100)-10, (int)(Math.random()*avgBassAmp*100)-10, this.getWidth()+10, this.getHeight()+10, null);
+		g2d.setColor(new Color(0,0,0,0.2f-(float)Math.min(avgBassAmp*4, 0.2)));
+		g2d.fillRect(0, 0, getWidth(), getHeight());
 		} catch (ArrayIndexOutOfBoundsException e) {
 			//This is fine!	
 		}

@@ -15,12 +15,12 @@ public class FreqGraphRenderer {
 		for(int i = 0; i < freq.length; i ++) {
 			float scaledAmp = freq[i].amplitude;
 			g2d.setColor(new Color((float)Math.min(1, scaledAmp*8), 0, (float)Math.min(1, 0.5+scaledAmp*8)));
-			g2d.fillRect(width/2 - (int)(i*barwidth), height - (int) (scaledAmp*height), (int)(barwidth), (int) (scaledAmp*height));
-			g2d.fillRect(width/2 + (int)(i*barwidth), height - (int) (scaledAmp*height), (int)(barwidth), (int) (scaledAmp*height));
+			g2d.fillRect(width/2 - (int)(i*barwidth), height - (int) (scaledAmp*height) - height/4, (int)(barwidth), (int) (scaledAmp*height)*2);
+			g2d.fillRect(width/2 + (int)(i*barwidth), height - (int) (scaledAmp*height) - height/4, (int)(barwidth), (int) (scaledAmp*height)*2);
 			g2d.setColor(new Color((float)Math.min(1, scaledAmp*8), 0, (float)Math.min(1, 0.5+scaledAmp*8), 0.01f));
 			for(int glow = 1; glow < 20 ;glow++){		
-				g2d.fillRect(width/2 - (int)(i*barwidth)-glow, height+glow - (int) (scaledAmp*height), (int)(barwidth)+glow*2, (int) (scaledAmp*height)+glow*2);
-				g2d.fillRect(width/2 + (int)(i*barwidth)-glow, height+glow - (int) (scaledAmp*height), (int)(barwidth)+glow*2, (int) (scaledAmp*height)+glow*2);
+				g2d.fillRect(width/2 - (int)(i*barwidth)-glow, height+glow - (int) (scaledAmp*height) - height/4, (int)(barwidth)+glow*2, (int) (scaledAmp*height)*2+glow*4);
+				g2d.fillRect(width/2 + (int)(i*barwidth)-glow, height+glow - (int) (scaledAmp*height) - height/4, (int)(barwidth)+glow*2, (int) (scaledAmp*height)*2+glow*4);
 			}
 		}
 		/*for(int i = 0; i < 10; i ++) {
