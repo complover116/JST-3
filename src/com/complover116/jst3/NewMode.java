@@ -15,6 +15,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 
 public class NewMode {
+	public static Clip music;
 	public static void start(String filename, String bgfname) throws IOException {
 		
 		
@@ -70,13 +71,13 @@ public class NewMode {
 		
 		
 		System.out.println("Loading music...");
-		Clip music;
+		//Clip music;
 		
 		try {
 			music = AudioSystem.getClip();
 			music.open(AudioSystem.getAudioInputStream(new File(filename+".wav")));
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(300);
 			} catch (InterruptedException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -91,7 +92,7 @@ public class NewMode {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			while(music.isRunning()) {
+			while(music.getMicrosecondPosition() < music.getMicrosecondLength()) {
 				try {
 					Thread.sleep(1);
 				} catch (InterruptedException e) {
@@ -101,9 +102,10 @@ public class NewMode {
 				
 				if(music.getFramePosition()>pos*JST3.SLIDERATE) {
 					pos++;
-					if(JST3.data.length>pos && JST3.data[pos]!= null)
-					efbg.update(JST3.data[pos], pos);
+					
 				}
+				if(JST3.data.length>pos && JST3.data[pos]!= null)
+					efbg.update(JST3.data[pos], pos);
 			}
 			System.out.println("Done");
 			System.exit(0);
