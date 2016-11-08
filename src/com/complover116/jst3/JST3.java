@@ -33,44 +33,25 @@ public class JST3 {
 		boolean useNewMode = true;
 		
 		String filename = "dedede";
-		if(args.length>0) filename = args[0];
-		if(args.length>1) {
-		FFT.fft = new FloatFFT_1D(SAMPLESIZE);
-		Audio.openAudio(filename+".wav");
-		SignalFrame sigframe = new SignalFrame(Audio.read(SAMPLESIZE), 0, SAMPLESIZE/UNDERSAMPLING);
-		int counter = 0;
-		System.out.print("Analysing");
-		for(counter = 0; counter < SAMPLENUM; counter ++){
-			if(counter % (int)(RATE/SLIDERATE*10) == 0)
-			System.out.print('.');
-			short sas[] = Audio.read(SLIDERATE);
-			if(sas== null) break;
-			sigframe.slide(sas);
-			Frequency res[] = FFT.TransformNew(sigframe);
-			res = Frequency.combine(res,100);
-			
-			data[counter] = res;
-			
+		if(args.length<2){
+			System.out.println("Err: required params <filename> <bgfname> are missing");
+			System.exit(0);
 		}
-		System.out.println();
-		System.out.println("Saving to "+filename+".dat");
-		Frequency[][] dataNew = new Frequency[counter+1][];
-		for(int i = 0; i < counter; i ++) {
-			dataNew[i] = data[i];
+		if(args.length>=8) {
+			try{ 
+				FreqGraphRenderer.baseR = Float.parseFloat(args[2]);
+				FreqGraphRenderer.baseG = Float.parseFloat(args[3]);
+				FreqGraphRenderer.baseB = Float.parseFloat(args[4]);
+				FreqGraphRenderer.scaleR = Float.parseFloat(args[5]);
+				FreqGraphRenderer.scaleG = Float.parseFloat(args[6]);
+				FreqGraphRenderer.scaleB = Float.parseFloat(args[7]);
+
+				
+			} catch (Exception e) {
+				
+			}
 		}
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename+".dat"));
-			oos.writeObject(dataNew);
-			oos.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Done");
-		} else {
+		filename = args[0];
 			if(!useNewMode){
 			Window frame = new Window(null);
 			FreqGraph graph = new FreqGraph();
@@ -150,12 +131,11 @@ public class JST3 {
 			}
 		} else {
 			try {
-				NewMode.start(filename);
+				NewMode.start(filename, args[1]);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
 		}
 		
 	}

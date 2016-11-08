@@ -2,6 +2,8 @@ package com.complover116.jst3;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,12 +15,50 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 
 public class NewMode {
-	public static void start(String filename) throws IOException {
+	public static void start(String filename, String bgfname) throws IOException {
 		
 		
 		JFrame frame = new JFrame("JST3 - New Mode!");
 		
-		EffectedBG efbg = new EffectedBG(ImageIO.read(new File("data/bck.jpg")));
+		BufferedImage img = ImageIO.read(new File(bgfname));
+		EffectedBG efbg = new EffectedBG(img);
+		
+		float avgR = 0, avgG = 0, avgB = 0;
+		WritableRaster raster = img.getRaster();
+		float rgba[] = new float[4];
+		for(int i = 0; i < img.getWidth(); i ++)
+			for(int j = 0; j < img.getHeight(); j ++){
+				raster.getPixel(i, j, rgba);
+				avgR += rgba[0];
+				avgG += rgba[1];
+				avgB += rgba[2];
+			}
+		avgR /= img.getWidth()*img.getHeight()*255;
+		avgG /= img.getWidth()*img.getHeight()*255;
+		avgB /= img.getWidth()*img.getHeight()*255;
+		
+		float minColorValue = Math.min(avgR, Math.min(avgB, avgG));
+		
+		avgR -= minColorValue;
+		avgG -= minColorValue;
+		avgB -= minColorValue;
+		
+		float maxColorValue = Math.max(avgR, Math.max(avgG, avgB));
+		
+		avgR *= 0.5f/maxColorValue;
+		avgG *= 0.5f/maxColorValue;
+		avgB *= 0.5f/maxColorValue;
+		
+		FreqGraphRenderer.baseR = avgR;
+		FreqGraphRenderer.baseG = avgG;
+		FreqGraphRenderer.baseB = avgB;
+		
+		FreqGraphRenderer.scaleR = avgR*16;
+		FreqGraphRenderer.scaleG = avgG*16;
+		FreqGraphRenderer.scaleB = avgB*16;
+		
+		System.out.println("Avg RBG: "+Math.round(avgR*255)+":"+Math.round(avgG*255)+":"+Math.round(avgB*255));
+		
 		frame.add(efbg);
 		efbg.setPreferredSize(new Dimension(1200, 900));
 		//frame.setBackground(new Color(0, true));
@@ -35,6 +75,12 @@ public class NewMode {
 		try {
 			music = AudioSystem.getClip();
 			music.open(AudioSystem.getAudioInputStream(new File(filename+".wav")));
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			music.start();
 			System.out.println("Start!");
 			int pos = 0;
