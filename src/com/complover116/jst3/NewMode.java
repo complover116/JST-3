@@ -10,6 +10,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
@@ -128,6 +129,9 @@ public class NewMode {
 				e2.printStackTrace();
 			}
 			music.start();
+			FloatControl volControl = 
+				    (FloatControl) NewMode.music.getControl(FloatControl.Type.MASTER_GAIN);
+			volControl.setValue((float) Math.log10(Metadata.volume+0.001)*20);
 			System.out.println("Start!");
 			int pos = 0;
 			efbg.update(JST3.data[pos], pos);
