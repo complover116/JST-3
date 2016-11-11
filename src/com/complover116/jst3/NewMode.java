@@ -161,6 +161,7 @@ public class NewMode {
 			System.out.println("Failed!");
 			e.printStackTrace();
 			System.out.println("The sound file is missing!");
+			System.exit(0);
 		} catch (UnsupportedAudioFileException e) {
 			System.out.println("Failed!");
 			e.printStackTrace();
