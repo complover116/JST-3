@@ -22,7 +22,15 @@ public class NewMode {
 		
 		JFrame frame = new JFrame("JST3 - New Mode!");
 		
-		BufferedImage img = ImageIO.read(new File(bgfname));
+		BufferedImage img = null;
+		try{
+			img = ImageIO.read(new File(bgfname));
+		} catch (IOException e) {
+				System.out.println("Failed!");
+				e.printStackTrace();
+				System.out.println("The backround image file is missing!");
+				System.exit(0);
+		}
 		EffectedBG efbg = new EffectedBG(img);
 		
 		float avgR = 0, avgG = 0, avgB = 0;
@@ -152,6 +160,7 @@ public class NewMode {
 		} catch (IOException e) {
 			System.out.println("Failed!");
 			e.printStackTrace();
+			System.out.println("The sound file is missing!");
 		} catch (UnsupportedAudioFileException e) {
 			System.out.println("Failed!");
 			e.printStackTrace();
