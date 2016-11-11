@@ -1,5 +1,6 @@
 package com.complover116.jst3;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -62,10 +63,15 @@ public class EffectedBG extends JPanel {
 		
 		//DRAW THE CONTROLS
 		
-		g2d.setColor(new Color(1,1,1, Math.min(volumeFade, 1)));
-		g2d.fill(new Arc2D.Float(0, 0, this.getHeight()/10, this.getHeight()/10, 0, Math.min(360, volumeDisplay*360), Arc2D.PIE));
-		g2d.setColor(new Color(0,0,0, Math.min(volumeFade, 1)));
+		g2d.setColor(new Color(1,1,1, Math.min(volumeFade*2, 1)));
+		g2d.fill(new Arc2D.Float(Math.max(0, Math.min(1f, 1-volumeFade))*this.getHeight()/10, 
+				Math.max(0, Math.min(1f, 1-volumeFade))*this.getHeight()/10, 
+				this.getHeight()/10 - Math.max(0, Math.min(1f, 1-volumeFade))*this.getHeight()/5, 
+				this.getHeight()/10 - Math.max(0, Math.min(1f, 1-volumeFade))*this.getHeight()/5, 0, Math.min(360, volumeDisplay*360), Arc2D.PIE));
+		g2d.setColor(new Color(0,0,0, Math.min(volumeFade*2, 1)));
 		g2d.fillOval(this.getHeight()/60, this.getHeight()/60, this.getHeight()/15, this.getHeight()/15);
+		
+		
 		//g2d.setColor(new Color(1,1,1, Math.min(volumeFade, 1)));
 		//g2d.drawString(Math.round(Metadata.volume*100)+"%", this.getHeight()/60, this.getHeight()/60);
 		
@@ -74,6 +80,8 @@ public class EffectedBG extends JPanel {
 			g2d.fillRect(this.getWidth()/9*3, this.getHeight()/4, this.getWidth()/8, this.getHeight()/2);
 			g2d.fillRect(this.getWidth()/9*5, this.getHeight()/4, this.getWidth()/8, this.getHeight()/2);
 		}
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.min(volumeFade*2, 1)));
+		g2d.drawImage(Images.volume, this.getHeight()/60, this.getHeight()/60, this.getHeight()/15, this.getHeight()/15, null);
 	}
 	public EffectedBG(BufferedImage bg) {
 		this.bg = bg;

@@ -18,6 +18,7 @@ public class NewMode {
 	public static Clip music;
 	public static void start(String filename, String bgfname) throws IOException {
 		
+		System.out.print("NewMode selected, initializing graphics...");
 		
 		JFrame frame = new JFrame("JST3 - New Mode!");
 		
@@ -38,11 +39,27 @@ public class NewMode {
 		avgG /= img.getWidth()*img.getHeight()*255;
 		avgB /= img.getWidth()*img.getHeight()*255;
 		
-		float minColorValue = Math.min(avgR, Math.min(avgB, avgG));
+		/*float minColorValue = Math.min(avgR, Math.min(avgB, avgG));
 		
 		avgR -= minColorValue;
 		avgG -= minColorValue;
-		avgB -= minColorValue;
+		avgB -= minColorValue;*/
+		//Different system which does not mess up the color balance
+		if(avgR < avgG) {
+			if(avgR<avgB) {
+				avgR = 0;
+			} else {
+				avgB = 0;
+			}
+		} else {
+			if(avgB<avgG) {
+				avgB = 0;
+			} else {
+				avgG = 0;
+			}
+		}
+		
+		
 		
 		float maxColorValue = Math.max(avgR, Math.max(avgG, avgB));
 		
@@ -54,11 +71,30 @@ public class NewMode {
 		FreqGraphRenderer.baseG = avgG;
 		FreqGraphRenderer.baseB = avgB;
 		
+		//This will only let the brightest color become the base
+		if(avgR < avgG) {
+			if(avgB<avgG) {
+				FreqGraphRenderer.baseR = 0;
+				FreqGraphRenderer.baseB = 0;
+			} else {
+				FreqGraphRenderer.baseR = 0;
+				FreqGraphRenderer.baseG = 0;
+			}
+		} else {
+			if(avgB<avgR) {
+				FreqGraphRenderer.baseG = 0;
+				FreqGraphRenderer.baseB = 0;
+			} else {
+				FreqGraphRenderer.baseG = 0;
+				FreqGraphRenderer.baseR = 0;
+			}
+		}
+		
 		FreqGraphRenderer.scaleR = avgR*16;
 		FreqGraphRenderer.scaleG = avgG*16;
 		FreqGraphRenderer.scaleB = avgB*16;
 		
-		System.out.println("Avg RBG: "+Math.round(avgR*255)+":"+Math.round(avgG*255)+":"+Math.round(avgB*255));
+		
 		
 		frame.add(efbg);
 		efbg.setPreferredSize(new Dimension(1200, 900));
@@ -66,10 +102,11 @@ public class NewMode {
 		efbg.setBackground(new Color(0, true));
 		frame.pack();
 		frame.setVisible(true);
-		
+		System.out.println("Done!");
 		new AnalysisThread(filename).start();
 		
 		
+		System.out.println("Avg RGB: "+Math.round(avgR*255)+":"+Math.round(avgG*255)+":"+Math.round(avgB*255));
 		System.out.println("Loading music...");
 		//Clip music;
 		
@@ -110,13 +147,13 @@ public class NewMode {
 			System.out.println("Done");
 			System.exit(0);
 		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Failed!");
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Failed!");
 			e.printStackTrace();
 		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Failed!");
 			e.printStackTrace();
 		}
 	}

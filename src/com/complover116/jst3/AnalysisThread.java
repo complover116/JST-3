@@ -8,6 +8,7 @@ public class AnalysisThread extends Thread  {
 		filename = fname;
 	}
 	public void run() {
+		System.out.println("Sound analysis thread started");
 		FFT.fft = new FloatFFT_1D(JST3.SAMPLESIZE);
 		Audio.openAudio(filename+".wav");
 		SignalFrame sigframe = new SignalFrame(Audio.read(JST3.SAMPLESIZE), 0, JST3.SAMPLESIZE/JST3.UNDERSAMPLING);
@@ -33,5 +34,6 @@ public class AnalysisThread extends Thread  {
 				}
 			}*/
 		}
+		System.out.println("Sound analysis is complete!");
 	}
 }

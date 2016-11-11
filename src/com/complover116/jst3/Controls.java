@@ -20,7 +20,7 @@ public class Controls implements KeyListener {
 					    (FloatControl) NewMode.music.getControl(FloatControl.Type.MASTER_GAIN);
 				volControl.setValue((float) Math.log10(Metadata.volume+0.001)*20);
 			}
-			EffectedBG.volumeFade = 3;
+			EffectedBG.volumeFade = 4;
 		break;
 		case KeyEvent.VK_UP:
 			if(Metadata.volume < 1) {
@@ -31,7 +31,7 @@ public class Controls implements KeyListener {
 					    (FloatControl) NewMode.music.getControl(FloatControl.Type.MASTER_GAIN);
 				volControl.setValue((float) Math.log10(Metadata.volume+0.001)*20);
 			}
-			EffectedBG.volumeFade = 3;
+			EffectedBG.volumeFade = 4;
 		break;
 		case KeyEvent.VK_SPACE:
 			if(NewMode.music.isRunning())

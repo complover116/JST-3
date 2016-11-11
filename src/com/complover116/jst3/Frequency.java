@@ -3,6 +3,10 @@ package com.complover116.jst3;
 import java.io.Serializable;
 
 public class Frequency implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -102837265965499503L;
 	/***
 	 * Signal amplitude (0-1)f!
 	 */

@@ -4,19 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Window;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-
-import org.jtransforms.fft.FloatFFT_1D;
 
 public class JST3 {
 	public static final float RATE = 44100;
@@ -28,7 +21,9 @@ public class JST3 {
 	public static Frequency[][] data = new Frequency[SAMPLENUM][];
 	public static volatile int lastAnalyzedFrame = 0;
 	public static void main(String[] args) {
-		System.out.println("I am JST 3!");
+		System.out.print("Loading resources...");
+		Images.load();
+		System.out.println("Done!");
 		
 		boolean useNewMode = true;
 		
