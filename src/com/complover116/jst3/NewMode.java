@@ -22,7 +22,7 @@ public class NewMode {
 		System.out.print("NewMode selected, initializing graphics...");
 		
 		JFrame frame = new JFrame("JST3 - New Mode!");
-		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		BufferedImage img = null;
 		try{
 			img = ImageIO.read(new File(bgfname));
@@ -98,6 +98,7 @@ public class NewMode {
 				FreqGraphRenderer.baseR = 0;
 			}
 		}
+		
 		
 		FreqGraphRenderer.scaleR = avgR*16;
 		FreqGraphRenderer.scaleG = avgG*16;

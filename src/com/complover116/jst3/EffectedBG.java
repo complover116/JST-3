@@ -58,7 +58,11 @@ public class EffectedBG extends JPanel {
 		FreqGraphRenderer.render(g2d, getWidth(), getHeight(), freq);
 		
 		for(int i = 0; i<particles.size(); i ++) {
-			particles.get(i).draw(g2d);
+			try {
+				particles.get(i).draw(g2d);
+			} catch (NullPointerException e) {
+				//This is fine, thats due to concurrent modification
+			}
 		}
 		
 		//DRAW THE CONTROLS
