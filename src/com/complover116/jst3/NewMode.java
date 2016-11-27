@@ -150,9 +150,8 @@ public class NewMode {
 					e.printStackTrace();
 				}
 				
-				if(music.getFramePosition()>pos*JST3.SLIDERATE) {
+				while(music.getFramePosition()>pos*JST3.SLIDERATE) {
 					pos++;
-					
 				}
 				if(JST3.data.length>pos && JST3.data[pos]!= null)
 					efbg.update(JST3.data[pos], pos);

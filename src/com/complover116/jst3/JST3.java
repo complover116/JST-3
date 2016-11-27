@@ -125,6 +125,14 @@ public class JST3 {
 				e.printStackTrace();
 			}
 		} else {
+			if(args.length >= 3) {
+				try{
+					Config.particleMul = Float.parseFloat(args[2]);
+				} catch (Exception e) {
+					System.out.println("Error! Argument 3 must be a number!");
+					System.exit(0);
+				}
+			}
 			try {
 				NewMode.start(filename, args[1]);
 			} catch (IOException e) {

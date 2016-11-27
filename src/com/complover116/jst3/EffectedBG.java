@@ -132,12 +132,12 @@ public class EffectedBG extends JPanel {
 		barwidth = getWidth()/(freq.length-4)/2;
 		for(int i = 0; i < freq.length-4; i ++) {
 			float scaledAmp = freq[i+4].amplitude;
-			if(Math.random()>(1-scaledAmp/32))
+			if(Math.random()>(1-scaledAmp*Config.particleMul/32))
 			particles.add(new Particle().setPos(getWidth()/2 - (int)(i*barwidth), getHeight()*3/4).setVel((float) (Math.random()*200-100), -scaledAmp*2000-100).setSizeAndDecay(8, 4)
 					.setColor(new Color((float)Math.min(1, Math.max(0, FreqGraphRenderer.baseR+scaledAmp*FreqGraphRenderer.scaleR)),
 							(float)Math.min(1, Math.max(FreqGraphRenderer.baseG+scaledAmp*FreqGraphRenderer.scaleG, 0)),
 							(float)Math.min(1, Math.max(FreqGraphRenderer.baseB+scaledAmp*FreqGraphRenderer.scaleB, 0)), 0.5f)));
-			if(Math.random()>1-scaledAmp/32)
+			if(Math.random()>(1-scaledAmp*Config.particleMul/32))
 			particles.add(new Particle().setPos(getWidth()/2 + (int)(i*barwidth), getHeight()*3/4).setVel((float) (Math.random()*200-100), -scaledAmp*2000-100).setSizeAndDecay(8, 4)
 					.setColor(new Color((float)Math.min(1, Math.max(0, FreqGraphRenderer.baseR+scaledAmp*FreqGraphRenderer.scaleR)),
 							(float)Math.min(1, Math.max(0, FreqGraphRenderer.baseG+scaledAmp*FreqGraphRenderer.scaleG)),
