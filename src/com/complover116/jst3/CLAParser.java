@@ -40,9 +40,23 @@ public class CLAParser {
 			Config.windowDecoration = false;
 			System.out.println("CLA:Window decoration disabled");
 			break;
+		case "-playlist":
+			pos++;
+			String playlist = getString(args, pos, argpos);
+			System.out.println("CLA:Reading playlist from "+playlist);
+			Config.loadPlayList(playlist);
+			break;
 		case "-fullscreen":
 			Config.fullscreen = true;
 			System.out.println("CLA:Program will start maximized");
+			break;
+		case "-shuffle":
+			Config.shuffle = true;
+			System.out.println("CLA:Shuffle mode enabled");
+			break;
+		case "-endless":
+			Config.oneshot = false;
+			System.out.println("CLA:The playlist will be repeated forever");
 			break;
 		case "-forcecolors":
 			

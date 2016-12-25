@@ -30,9 +30,10 @@ public class JST3 {
 		} else {
 			
 			//PARSE CLA!
+			Config.playlist.add(filename);
 			CLAParser.parse(args, 2);
 			try {
-				NewMode.start(filename, args[1]);
+				NewMode.start(args[1]);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

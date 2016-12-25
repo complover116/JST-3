@@ -17,7 +17,8 @@ import javax.swing.JFrame;
 
 public class NewMode {
 	public static Clip music;
-	public static void start(String filename, String bgfname) throws IOException {
+	static EffectedBG efbg;
+	public static void start(String bgfname) throws IOException {
 		
 		System.out.print("NewMode selected, initializing graphics...");
 		
@@ -36,7 +37,7 @@ public class NewMode {
 				System.out.println("The backround image file is missing!");
 				System.exit(0);
 		}
-		EffectedBG efbg = new EffectedBG(img);
+		efbg = new EffectedBG(img);
 		
 		float avgR = 0, avgG = 0, avgB = 0;
 		WritableRaster raster = img.getRaster();
@@ -117,40 +118,54 @@ public class NewMode {
 		frame.pack();
 		frame.setVisible(true);
 		System.out.println("Done!");
-		new AnalysisThread(filename).start();
+		
 		
 		
 		System.out.println("Avg RGB: "+Math.round(avgR*255)+":"+Math.round(avgG*255)+":"+Math.round(avgB*255));
-		System.out.println("Loading music...");
-		//Clip music;
-		
+		int id = 0;
+		while(Config.playlist.size()>0){
+			
+			if(Config.shuffle) id = (int)(Math.random()*Config.playlist.size());
+			else {
+				
+				if(!Config.oneshot) {
+					id++;
+					if(id >= Config.playlist.size()) id = 0;
+				}
+			}
+			switchMusic(Config.playlist.get(id));
+			if(Config.oneshot)Config.playlist.remove(id);
+		}
+		System.exit(0);
+	}
+	public static void switchMusic(String filename){
+		System.out.println("Loading filename...");
+		new AnalysisThread(filename).start();
 		try {
 			music = AudioSystem.getClip();
 			music.open(AudioSystem.getAudioInputStream(new File(filename+".wav")));
-			try {
-				Thread.sleep(300);
-			} catch (InterruptedException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			music.start();
 			FloatControl volControl = 
 				    (FloatControl) NewMode.music.getControl(FloatControl.Type.MASTER_GAIN);
 			volControl.setValue((float) Math.log10(Metadata.volume+0.001)*20);
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e2) {
+				e2.printStackTrace();
+			}
+			music.start();
+			
 			System.out.println("Start!");
 			int pos = 0;
 			efbg.update(JST3.data[pos], pos);
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			while(music.getMicrosecondPosition() < music.getMicrosecondLength()) {
 				try {
 					Thread.sleep(1);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
@@ -161,7 +176,7 @@ public class NewMode {
 					efbg.update(JST3.data[pos], pos);
 			}
 			System.out.println("Done");
-			System.exit(0);
+			
 		} catch (LineUnavailableException e) {
 			System.out.println("Failed!");
 			e.printStackTrace();
@@ -169,7 +184,7 @@ public class NewMode {
 			System.out.println("Failed!");
 			e.printStackTrace();
 			System.out.println("The sound file is missing!");
-			System.exit(0);
+			System.exit(2);
 		} catch (UnsupportedAudioFileException e) {
 			System.out.println("Failed!");
 			e.printStackTrace();
