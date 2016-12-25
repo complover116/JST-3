@@ -22,7 +22,11 @@ public class NewMode {
 		System.out.print("NewMode selected, initializing graphics...");
 		
 		JFrame frame = new JFrame("JST3 - New Mode!");
+		if(!Config.windowDecoration) frame.setUndecorated(true);
+		if(Config.fullscreen) frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		BufferedImage img = null;
 		try{
 			img = ImageIO.read(new File(bgfname));
