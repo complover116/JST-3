@@ -18,6 +18,19 @@ import javax.swing.JFrame;
 public class NewMode {
 	public static Clip music;
 	static EffectedBG efbg;
+	
+	
+	
+	
+	public static float frames = 0;
+	public static long lastReport = 0;
+	public static long ticktimes = 0;
+	
+	public static float realFPS = 1;
+	public static float avgTickTime = 1;
+	
+	static long lastTick = 0;
+	
 	public static void start(String bgfname) throws IOException {
 		
 		System.out.print("NewMode selected, initializing graphics...");
@@ -28,6 +41,8 @@ public class NewMode {
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		Renderer.init(1280, 1024);
+		
 		BufferedImage img = null;
 		try{
 			img = ImageIO.read(new File(bgfname));
@@ -37,7 +52,9 @@ public class NewMode {
 				System.out.println("The backround image file is missing!");
 				System.exit(0);
 		}
-		efbg = new EffectedBG(img);
+		Images.bg = img;
+		
+		efbg = new EffectedBG();
 		
 		float avgR = 0, avgG = 0, avgB = 0;
 		WritableRaster raster = img.getRaster();
@@ -157,6 +174,8 @@ public class NewMode {
 			System.out.println("Start!");
 			int pos = 0;
 			efbg.update(JST3.data[pos], pos);
+			lastTick = System.nanoTime();
+			lastReport = System.nanoTime();
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e1) {
@@ -164,16 +183,32 @@ public class NewMode {
 			}
 			while(music.getMicrosecondPosition() < music.getMicrosecondLength()) {
 				try {
-					Thread.sleep(1);
+					Thread.sleep((long) (lastTick + (1/Config.FRAMERATE)*1000000000 - System.nanoTime())/1000000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+				} catch (IllegalArgumentException e1) {
+					//Warn about lag!
 				}
-				
+				lastTick = System.nanoTime();
+				//System.out.println("Frame!");
 				while(music.getFramePosition()>pos*JST3.SLIDERATE) {
 					pos++;
 				}
 				if(JST3.data.length>pos && JST3.data[pos]!= null)
 					efbg.update(JST3.data[pos], pos);
+				
+				efbg.paintImmediately(0, 0, efbg.getWidth(), efbg.getHeight());
+				ticktimes += System.nanoTime() - lastTick;
+				frames ++;
+				if(System.nanoTime()-lastReport>Config.reportTime*1000000000) {
+					realFPS = (float)Math.round(frames/Config.reportTime*10)/10;
+					avgTickTime = (ticktimes/frames/1000000);
+					if(Config.printReports)System.out.println("Running at "+realFPS+"FPS (target: "+Config.FRAMERATE+"), avg frame takes "+avgTickTime+
+							"ms ("+(1000/avgTickTime)+" FPS possible)");
+					lastReport = System.nanoTime();
+					frames = 0;
+					ticktimes = 0;
+				}
 			}
 			System.out.println("Done");
 			

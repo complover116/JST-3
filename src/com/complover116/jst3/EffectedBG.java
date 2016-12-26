@@ -2,10 +2,10 @@ package com.complover116.jst3;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -16,7 +16,7 @@ public class EffectedBG extends JPanel {
 	 */
 	private static final long serialVersionUID = 6084337019173607968L;
 	Frequency freq[] = new Frequency[0];
-	BufferedImage bg;
+	
 	public static ArrayList<Particle> particles = new ArrayList<Particle>();
 	public static long lastTick = 0;
 	
@@ -33,38 +33,11 @@ public class EffectedBG extends JPanel {
 	public void paintComponent(Graphics g) {
 		
 		Graphics2D g2d = (Graphics2D)g;
-		//g2d.setColor(Color.black);
-		//g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
-		g2d.setBackground(new Color(0, true));
-		g2d.clearRect(0, 0, getWidth(), getHeight());
-		try{
-			float avgBassAmp = 0;
-			for(int i = 1; i < 10; i ++ ){
-				avgBassAmp += freq[i].amplitude;
-			}
-			avgBassAmp /= 9;
 		
-			float avgAmp = 0;
-			for(int i = 1; i < 100; i ++ ){
-				avgAmp += freq[i].amplitude;
-			}
-			avgAmp /= 99;
-		g2d.drawImage(bg, (int)(Math.random()*avgBassAmp*200)-10-(int)(avgBassAmp*100), (int)(Math.random()*avgBassAmp*200)-10-(int)(avgBassAmp*100), this.getWidth()+20, this.getHeight()+20, null);
-		g2d.setColor(new Color(0,0,0,1f-(float)Math.min(avgAmp*16+avgBassAmp*8, 1)));
-		g2d.fillRect(0, 0, getWidth(), getHeight());
-		} catch (ArrayIndexOutOfBoundsException e) {
-			//This is fine!	
-		}
-		FreqGraphRenderer.render(g2d, getWidth(), getHeight(), freq);
-		
-		for(int i = 0; i<particles.size(); i ++) {
-			try {
-				particles.get(i).draw(g2d);
-			} catch (NullPointerException e) {
-				//This is fine, thats due to concurrent modification
-			}
-		}
-		
+		if(Config.useBuffer)
+		g2d.drawImage(Renderer.frame, 0, 0, null);
+		else
+		Renderer.instantRender(g2d, freq);
 		//DRAW THE CONTROLS
 		
 		g2d.setColor(new Color(1,1,1, Math.min(volumeFade*2, 1)));
@@ -84,14 +57,23 @@ public class EffectedBG extends JPanel {
 			g2d.fillRect(this.getWidth()/9*3, this.getHeight()/4, this.getWidth()/8, this.getHeight()/2);
 			g2d.fillRect(this.getWidth()/9*5, this.getHeight()/4, this.getWidth()/8, this.getHeight()/2);
 		}
+		g2d.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+		g2d.setColor(Color.WHITE);
+		if(Config.showFPS) {
+			g2d.drawString("Running at "+NewMode.realFPS+"FPS (target: "+Config.FRAMERATE+"), avg frame takes "+Math.round(NewMode.avgTickTime)+
+							"ms ("+Math.round(1000/NewMode.avgTickTime)+" FPS possible)", 0, 25);
+		}
+		
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.min(volumeFade*2, 1)));
 		g2d.drawImage(Images.volume, this.getHeight()/60, this.getHeight()/60, this.getHeight()/15, this.getHeight()/15, null);
+		
 	}
-	public EffectedBG(BufferedImage bg) {
-		this.bg = bg;
+	public EffectedBG() {
+		//this.bg = bg;
 		this.addKeyListener(new Controls());
 		this.setFocusable(true);
 		this.requestFocusInWindow();
+		
 	}
 	
 	public void update(Frequency freq[], int pos) {		
@@ -101,7 +83,7 @@ public class EffectedBG extends JPanel {
 		float deltaT = (float)(System.nanoTime()-lastTick)/1000000000;
 		if(lastTick == 0) deltaT = 0;
 		lastTick = System.nanoTime();
-		
+		//System.out.println("Frame "+deltaT);
 		
 		if(NewMode.music!=null && !NewMode.music.isRunning()) {
 			for(int i = 0; i < freq.length; i ++) {
@@ -145,13 +127,13 @@ public class EffectedBG extends JPanel {
 		}
 		
 		
-		
 		for(int i = 0; i<particles.size(); i ++) {
 			particles.get(i).tick(deltaT);
 			if(particles.get(i).dead){
 				particles.remove(i);
 			}
 		}
-		this.repaint();
+		if(Config.useBuffer)
+		Renderer.renderFrame(freq);
 	}
 }

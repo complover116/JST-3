@@ -15,6 +15,17 @@ public class Config {
 	public static ArrayList<String> playlist = new ArrayList<String>();
 	public static boolean shuffle = false;
 	public static boolean oneshot = true;
+	
+	//MUCH faster without the buffer, but it is not possible to record if it is disabled
+	public static boolean useBuffer = false;
+	public static float FRAMERATE = 60;
+	
+	
+	//Debug
+	public static float reportTime = 0.5f;
+	public static boolean printReports = false;
+	public static boolean showFPS = false;
+	
 	public static void loadPlayList(String playlist2) {
 		try{
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(playlist2)));

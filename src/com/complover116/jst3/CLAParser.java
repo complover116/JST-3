@@ -36,6 +36,15 @@ public class CLAParser {
 			Config.particleMul = getFloat(args, pos, argpos);
 			System.out.println("CLA:Particle mul set to "+Config.particleMul);
 			break;
+		case "-fps":
+			pos++;
+			Config.FRAMERATE = getFloat(args, pos, argpos);
+			System.out.println("CLA:Target FPS set to "+Config.FRAMERATE);
+			break;
+		case "-unlimitedfps":
+			Config.FRAMERATE = Float.POSITIVE_INFINITY;
+			System.out.println("CLA:FPS limit disabled: target FPS set to "+Config.FRAMERATE);
+			break;
 		case "-nodecoration":
 			Config.windowDecoration = false;
 			System.out.println("CLA:Window decoration disabled");
@@ -53,6 +62,10 @@ public class CLAParser {
 		case "-shuffle":
 			Config.shuffle = true;
 			System.out.println("CLA:Shuffle mode enabled");
+			break;
+		case "-showfps":
+			Config.showFPS = true;
+			System.out.println("CLA:FPS Counter enabled");
 			break;
 		case "-endless":
 			Config.oneshot = false;

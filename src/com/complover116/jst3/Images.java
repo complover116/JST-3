@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Images {
+	public static BufferedImage bg;
+	
 	public static BufferedImage volume;
 	
 	public static void load() {
