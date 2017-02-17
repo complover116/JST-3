@@ -169,18 +169,20 @@ public class NewMode {
 			} catch (InterruptedException e2) {
 				e2.printStackTrace();
 			}
-			music.start();
+			
 			
 			System.out.println("Start!");
+			
 			int pos = 0;
 			efbg.update(JST3.data[pos], pos);
 			lastTick = System.nanoTime();
 			lastReport = System.nanoTime();
 			try {
-				Thread.sleep(100);
+				Thread.sleep(100+(int)(Config.delay*1000));
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
+			music.start();
 			while(music.getMicrosecondPosition() < music.getMicrosecondLength()) {
 				try {
 					Thread.sleep((long) (lastTick + (1/Config.FRAMERATE)*1000000000 - System.nanoTime())/1000000);

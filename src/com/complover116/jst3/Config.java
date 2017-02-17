@@ -19,7 +19,7 @@ public class Config {
 	//MUCH faster without the buffer, but it is not possible to record if it is disabled
 	public static boolean useBuffer = false;
 	public static float FRAMERATE = 60;
-	
+	public static float delay = 0;
 	
 	//Debug
 	public static float reportTime = 0.5f;

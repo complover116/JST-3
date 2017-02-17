@@ -41,6 +41,11 @@ public class CLAParser {
 			Config.FRAMERATE = getFloat(args, pos, argpos);
 			System.out.println("CLA:Target FPS set to "+Config.FRAMERATE);
 			break;
+		case "-delay":
+			pos++;
+			Config.delay = getFloat(args, pos, argpos);
+			System.out.println("CLA:Will delay for "+Config.delay);
+			break;
 		case "-unlimitedfps":
 			Config.FRAMERATE = Float.POSITIVE_INFINITY;
 			System.out.println("CLA:FPS limit disabled: target FPS set to "+Config.FRAMERATE);
