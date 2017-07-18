@@ -2,6 +2,8 @@ package com.complover116.jst3;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -41,7 +43,8 @@ public class NewMode {
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		Renderer.init(1280, 1024);
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		Renderer.init(gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight());
 		
 		BufferedImage img = null;
 		try{
