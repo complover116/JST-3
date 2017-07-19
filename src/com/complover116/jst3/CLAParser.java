@@ -29,7 +29,11 @@ public class CLAParser {
 		switch (args[pos]) {
 		case "-nojitter":
 			Config.jitter = false;
-			System.out.println("CLA:BGI jitter disabled");
+			System.out.println("CLA:Background jitter disabled");
+			break;
+		case "-oldanim":
+			Config.newBgAnim = false;
+			System.out.println("CLA:Disabled new background animation");
 			break;
 		case "-particlemul":
 			pos++;

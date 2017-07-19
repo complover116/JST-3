@@ -26,6 +26,13 @@ public class EffectedBG extends JPanel {
 	public static float volumeFade = 3;
 	public static float volumeDisplay = 0;
 	
+	public static float imgVelX = 0;
+	public static float imgVelY = 0;
+	public static float imgRotVel = 0;
+	public static float imgRot = -0.02f;
+	public static float imgX = -50;
+	public static float imgY = -50;
+	
 	public static float pauseBlink = 0;
 	boolean pauseBlinkUp = true;
 	
@@ -84,6 +91,15 @@ public class EffectedBG extends JPanel {
 		if(lastTick == 0) deltaT = 0;
 		lastTick = System.nanoTime();
 		//System.out.println("Frame "+deltaT);
+		if(Config.newBgAnim) {
+			imgX += imgVelX*deltaT;
+			imgY += imgVelY*deltaT;
+			imgRot += imgRotVel*deltaT;
+			
+			imgVelX-=imgX*Math.random()*deltaT*0.2f;
+			imgVelY-=imgY*Math.random()*deltaT*0.5f;
+			imgRotVel-=imgRot*Math.random()*deltaT*0.4f;
+		}
 		
 		if(NewMode.music!=null && !NewMode.music.isRunning()) {
 			for(int i = 0; i < freq.length; i ++) {
