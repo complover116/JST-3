@@ -34,7 +34,7 @@ public class Renderer {
 				avgAmp += freq[i].amplitude;
 			}
 			avgAmp /= 99;
-		g2d.drawImage(Images.bg, (int)(Math.random()*avgBassAmp*200)-10-(int)(avgBassAmp*100), (int)(Math.random()*avgBassAmp*200)-10-(int)(avgBassAmp*100), frame.getWidth()+20, frame.getHeight()+20, null);
+		g2d.drawImage(Images.bg, (int)(Math.random()*avgBassAmp*200)-20-(int)(avgBassAmp*100), (int)(Math.random()*avgBassAmp*200)-20-(int)(avgBassAmp*100), frame.getWidth()+40, frame.getHeight()+40, null);
 		g2d.setColor(new Color(0,0,0,1f-(float)Math.min(avgAmp*16+avgBassAmp*8, 1)));
 		g2d.fillRect(0, 0, frame.getWidth(), frame.getHeight());
 		} catch (ArrayIndexOutOfBoundsException e) {

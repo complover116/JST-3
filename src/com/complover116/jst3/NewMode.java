@@ -79,7 +79,7 @@ public class NewMode {
 		avgG -= minColorValue;
 		avgB -= minColorValue;*/
 		//Different system which does not mess up the color balance
-		if(avgR < avgG) {
+		/*if(avgR < avgG) {
 			if(avgR<avgB) {
 				avgR = 0;
 			} else {
@@ -91,9 +91,11 @@ public class NewMode {
 			} else {
 				avgG = 0;
 			}
-		}
+		}*/
 		
-		
+		avgR = (float) avgR*avgR;
+		avgG = (float) avgG*avgG;
+		avgB = (float) avgB*avgB;
 		
 		float maxColorValue = Math.max(avgR, Math.max(avgG, avgB));
 		
@@ -105,8 +107,10 @@ public class NewMode {
 		FreqGraphRenderer.baseG = avgG;
 		FreqGraphRenderer.baseB = avgB;
 		
+		
+		
 		//This will only let the brightest color become the base
-		if(avgR < avgG) {
+		/*if(avgR < avgG) {
 			if(avgB<avgG) {
 				FreqGraphRenderer.baseR = 0;
 				FreqGraphRenderer.baseB = 0;
@@ -122,7 +126,7 @@ public class NewMode {
 				FreqGraphRenderer.baseG = 0;
 				FreqGraphRenderer.baseR = 0;
 			}
-		}
+		}*/
 		
 		
 		FreqGraphRenderer.scaleR = avgR*16;
