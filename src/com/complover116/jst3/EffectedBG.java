@@ -40,7 +40,7 @@ public class EffectedBG extends JPanel implements ComponentListener {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		
+		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D)g;
 		
 		Renderer.instantRender(g2d, freq);

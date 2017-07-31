@@ -45,6 +45,11 @@ public class CLAParser {
 			Config.FRAMERATE = getFloat(args, pos, argpos);
 			System.out.println("CLA:Target FPS set to "+Config.FRAMERATE);
 			break;
+		case "-reporttime":
+			pos++;
+			Config.reportTime = getFloat(args, pos, argpos);
+			System.out.println("CLA:Statistics are reported every "+Config.reportTime+" seconds");
+			break;
 		case "-delay":
 			pos++;
 			Config.delay = getFloat(args, pos, argpos);

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -16,8 +18,9 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
+import javax.swing.Timer;
 
-public class NewMode {
+public class NewMode implements ActionListener {
 	public static Clip music;
 	static EffectedBG efbg;
 	
@@ -32,6 +35,9 @@ public class NewMode {
 	public static float avgTickTime = 1;
 	
 	static long lastTick = 0;
+	
+	int pos = 0;
+	int id = 0;
 	
 	public static void start(String bgfname) throws IOException {
 		
@@ -147,21 +153,13 @@ public class NewMode {
 		
 		
 		System.out.println("Avg RGB: "+Math.round(avgR*255)+":"+Math.round(avgG*255)+":"+Math.round(avgB*255));
-		int id = 0;
-		while(Config.playlist.size()>0){
-			
-			if(Config.shuffle) id = (int)(Math.random()*Config.playlist.size());
-			else {
-				
-				if(!Config.oneshot) {
-					id++;
-					if(id >= Config.playlist.size()) id = 0;
-				}
-			}
-			switchMusic(Config.playlist.get(id));
-			if(Config.oneshot)Config.playlist.remove(id);
-		}
-		System.exit(0);
+		NewMode newMode = new NewMode();
+		newMode.updatePlayingMusic();
+		Timer timer = new Timer((int)(1/Config.FRAMERATE*1000), newMode);
+		timer.start();
+	}
+	NewMode(){
+		pos = 0;
 	}
 	public static void switchMusic(String filename){
 		System.out.println("Loading filename...");
@@ -191,36 +189,10 @@ public class NewMode {
 				e1.printStackTrace();
 			}
 			music.start();
-			while(music.getMicrosecondPosition() < music.getMicrosecondLength()) {
-				try {
-					Thread.sleep((long) (lastTick + (1/Config.FRAMERATE)*1000000000 - System.nanoTime())/1000000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (IllegalArgumentException e1) {
-					//Warn about lag!
-				}
-				lastTick = System.nanoTime();
-				//System.out.println("Frame!");
-				while(music.getFramePosition()>pos*JST3.SLIDERATE) {
-					pos++;
-				}
-				if(JST3.data.length>pos && JST3.data[pos]!= null)
-					efbg.update(JST3.data[pos], pos);
-				
-				efbg.paintImmediately(0, 0, efbg.getWidth(), efbg.getHeight());
-				ticktimes += System.nanoTime() - lastTick;
-				frames ++;
-				if(System.nanoTime()-lastReport>Config.reportTime*1000000000) {
-					realFPS = (float)Math.round(frames/Config.reportTime*10)/10;
-					avgTickTime = (ticktimes/frames/1000000);
-					if(Config.printReports)System.out.println("Running at "+realFPS+"FPS (target: "+Config.FRAMERATE+"), avg frame takes "+avgTickTime+
-							"ms ("+(1000/avgTickTime)+" FPS possible)");
-					lastReport = System.nanoTime();
-					frames = 0;
-					ticktimes = 0;
-				}
-			}
-			System.out.println("Done");
+			
+			
+
+			
 			
 		} catch (LineUnavailableException e) {
 			System.out.println("Failed!");
@@ -233,6 +205,50 @@ public class NewMode {
 		} catch (UnsupportedAudioFileException e) {
 			System.out.println("Failed!");
 			e.printStackTrace();
+		}
+	}
+	void updatePlayingMusic() {
+		if(Config.playlist.size()>0){
+			
+			if(Config.shuffle) id = (int)(Math.random()*Config.playlist.size());
+			else {
+				
+				if(!Config.oneshot) {
+					id++;
+					if(id >= Config.playlist.size()) id = 0;
+				}
+			}
+			switchMusic(Config.playlist.get(id));
+			if(Config.oneshot)Config.playlist.remove(id);
+		} else
+		System.exit(0);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		lastTick = System.nanoTime();
+		//System.out.println("Frame!");
+		while(music.getFramePosition()>pos*JST3.SLIDERATE) {
+			pos++;
+		}
+		if(JST3.data.length>pos && JST3.data[pos]!= null)
+			efbg.update(JST3.data[pos], pos);
+		
+		efbg.repaint(0, 0, efbg.getWidth(), efbg.getHeight());
+		ticktimes += System.nanoTime() - lastTick;
+		frames ++;
+		if(System.nanoTime()-lastReport>Config.reportTime*1000000000) {
+			realFPS = (float)Math.round(frames/Config.reportTime*10)/10;
+			avgTickTime = (ticktimes/frames/1000000);
+			if(Config.printReports)System.out.println("Running at "+realFPS+"FPS (target: "+Config.FRAMERATE+"), avg frame takes "+avgTickTime+
+					"ms ("+(1000/avgTickTime)+" FPS possible)");
+			lastReport = System.nanoTime();
+			frames = 0;
+			ticktimes = 0;
+		}
+		if(music.getMicrosecondPosition() >= music.getMicrosecondLength()) {
+			System.out.println("Done");
+			updatePlayingMusic();
+			
 		}
 	}
 }
