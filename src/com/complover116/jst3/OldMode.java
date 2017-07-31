@@ -12,6 +12,14 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class OldMode {
+	static void startOldMode(String filename) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				useOldMode(filename);
+			}
+		}, "Old Mode Thread").start();
+	}
 	public static void useOldMode(String filename) {
 		Window frame = new Window(null);
 		FreqGraph graph = new FreqGraph();

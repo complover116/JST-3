@@ -5,12 +5,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.geom.Arc2D;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-public class EffectedBG extends JPanel {
+public class EffectedBG extends JPanel implements ComponentListener {
 	/**
 	 * 
 	 */
@@ -41,9 +43,6 @@ public class EffectedBG extends JPanel {
 		
 		Graphics2D g2d = (Graphics2D)g;
 		
-		if(Config.useBuffer)
-		g2d.drawImage(Renderer.frame, 0, 0, null);
-		else
 		Renderer.instantRender(g2d, freq);
 		//DRAW THE CONTROLS
 		
@@ -131,12 +130,14 @@ public class EffectedBG extends JPanel {
 		for(int i = 0; i < freq.length-4; i ++) {
 			float scaledAmp = freq[i+4].amplitude;
 			if(Math.random()>(1-scaledAmp*Config.particleMul/32))
-			particles.add(new Particle().setPos(getWidth()/2 - (int)(i*barwidth), getHeight()*3/4).setVel((float) (Math.random()*200-100), -scaledAmp*2000-100).setSizeAndDecay(8, 4)
+			particles.add(new Particle().setPos(getWidth()/2 - (int)(i*barwidth), getHeight()*3/4).setVel((float) (Math.random()*200-100), -scaledAmp*2000-100)
+					.setSizeAndDecay((float)Renderer.WIDTH/1920*8, (float)Renderer.WIDTH/1920*4)
 					.setColor(new Color((float)Math.min(1, Math.max(0, FreqGraphRenderer.baseR+scaledAmp*FreqGraphRenderer.scaleR)),
 							(float)Math.min(1, Math.max(FreqGraphRenderer.baseG+scaledAmp*FreqGraphRenderer.scaleG, 0)),
 							(float)Math.min(1, Math.max(FreqGraphRenderer.baseB+scaledAmp*FreqGraphRenderer.scaleB, 0)), 0.5f)));
 			if(Math.random()>(1-scaledAmp*Config.particleMul/32))
-			particles.add(new Particle().setPos(getWidth()/2 + (int)(i*barwidth), getHeight()*3/4).setVel((float) (Math.random()*200-100), -scaledAmp*2000-100).setSizeAndDecay(8, 4)
+			particles.add(new Particle().setPos(getWidth()/2 + (int)(i*barwidth), getHeight()*3/4).setVel((float) (Math.random()*200-100), -scaledAmp*2000-100)
+					.setSizeAndDecay((float)Renderer.WIDTH/1920*8, (float)Renderer.WIDTH/1920*4)
 					.setColor(new Color((float)Math.min(1, Math.max(0, FreqGraphRenderer.baseR+scaledAmp*FreqGraphRenderer.scaleR)),
 							(float)Math.min(1, Math.max(0, FreqGraphRenderer.baseG+scaledAmp*FreqGraphRenderer.scaleG)),
 							(float)Math.min(1, Math.max(0, FreqGraphRenderer.baseB+scaledAmp*FreqGraphRenderer.scaleB)), 0.5f)));
@@ -149,7 +150,16 @@ public class EffectedBG extends JPanel {
 				particles.remove(i);
 			}
 		}
-		if(Config.useBuffer)
-		Renderer.renderFrame(freq);
 	}
+	@Override
+	public void componentResized(ComponentEvent e) {
+		Renderer.WIDTH = this.getWidth();
+		Renderer.HEIGHT = this.getHeight();
+	}
+	@Override
+	public void componentMoved(ComponentEvent e) {}
+	@Override
+	public void componentShown(ComponentEvent e) {}
+	@Override
+	public void componentHidden(ComponentEvent e) {}
 }

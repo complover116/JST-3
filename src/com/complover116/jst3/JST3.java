@@ -19,9 +19,13 @@ public class JST3 {
 		boolean useNewMode = true;
 		
 		String filename = "dedede";
+		if(args.length<1){
+			GUI.initConfigGUI();
+			return;
+		}
 		if(args.length<2){
 			System.out.println("Err: required params <filename> <bgfname> are missing");
-			System.exit(0);
+			System.exit(-1);
 		}
 		
 		filename = args[0];

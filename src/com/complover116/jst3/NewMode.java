@@ -139,6 +139,7 @@ public class NewMode {
 		efbg.setPreferredSize(new Dimension(1200, 900));
 		//frame.setBackground(new Color(0, true));
 		efbg.setBackground(new Color(0, true));
+		efbg.addComponentListener(efbg);
 		frame.pack();
 		frame.setVisible(true);
 		System.out.println("Done!");
