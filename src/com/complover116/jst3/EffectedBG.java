@@ -90,6 +90,7 @@ public class EffectedBG extends JPanel implements ComponentListener {
 		if(lastTick == 0) deltaT = 0;
 		lastTick = System.nanoTime();
 		//System.out.println("Frame "+deltaT);
+		if(NewMode.music.isRunning())
 		if(Config.newBgAnim) {
 			imgX += imgVelX*deltaT;
 			imgY += imgVelY*deltaT;
@@ -103,7 +104,7 @@ public class EffectedBG extends JPanel implements ComponentListener {
 		if(NewMode.music!=null && !NewMode.music.isRunning()) {
 			for(int i = 0; i < freq.length; i ++) {
 				if(freq[i].amplitude > 0)
-				freq[i].amplitude *= 0.999;
+				freq[i].amplitude -= 0.001;
 				if(freq[i].amplitude < 0) {
 					freq[i].amplitude = 0;
 				}
